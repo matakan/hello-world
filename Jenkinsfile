@@ -1,22 +1,21 @@
 pipeline {
-    agent any
+    agent none
     stages {
-        stage('Build') {
+        stage('Back-end') {
+            agent {
+                docker { image 'maven:3-alpine' }
+            }
             steps {
-                sh './gradlew build'
+                sh 'mvn --version'
             }
         }
-        stage('Test') {
-            steps {
-                sh './gradlew check'
+        stage('Front-end') {
+            agent {
+                docker { image 'node:7-alpine' }
             }
-        }
-    }
-
-    post {
-        always {
-            archive 'build/libs/**/*.jar'
-            junit 'build/reports/**/*.xml'
+            steps {
+                sh 'node --version'
+            }
         }
     }
 }
