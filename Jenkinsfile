@@ -1,10 +1,22 @@
 pipeline {
-    agent { docker 'maven:3.3.3' }
+    agent any
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
-                sh 'mvn --version'
+                sh './gradlew build'
             }
+        }
+        stage('Test') {
+            steps {
+                sh './gradlew check'
+            }
+        }
+    }
+
+    post {
+        always {
+            archive 'build/libs/**/*.jar'
+            junit 'build/reports/**/*.xml'
         }
     }
 }
